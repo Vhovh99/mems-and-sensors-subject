@@ -22,9 +22,10 @@ Name(s): ______________________________  Team: ______  Date: __________
 ## A · Required reading
 
 1. This sheet, including the I²C primer (F) and the console reference (G).
-2. The datasheet for your assigned sensor — **the sections you need**: pin
-   description, electrical characteristics (supply and logic levels), register map,
-   and the sensitivity table.
+2. The datasheet for **ST ISM330DHCXTR** (iNEMO 6-axis IMU) — **the sections you
+   need**: pin description, electrical characteristics (supply and logic levels),
+   register map, and the sensitivity table. Download it from st.com; note the
+   revision number on the front page, because you will be asked for it.
 3. Your board's user manual pinout page — which physical pins carry I²C1.
 
 You have not been taught I²C in a lecture yet; that is Lecture 3, with the full
@@ -44,6 +45,7 @@ will type into the console at the bench.
 | 3 | Absolute maximum voltage on any pin | | |
 | 4 | I²C 7-bit device address, and the pin that selects it | | |
 | 5 | Device-ID register: **address** and **expected value** | | |
+| 5b | The datasheet revision you are reading | | — |
 | 6 | Accelerometer control register: address | | |
 | 7 | Bit field that sets full-scale range, and its **encoding** | | |
 | 8 | Bit field that sets output data rate, and its encoding | | |

@@ -151,7 +151,7 @@ Resolution at min 70, after the students themselves compute it: 0.5° of tilt is
 sin(0.5°) = 8.73 mg of signal. Part A's zero-g offset is ±40 mg with ±0.5 mg/°C drift; Part B's
 is ±10 mg with ±0.1 mg/°C. Calibrated at 20 °C and used over 0–40 °C (ΔT = ±20 °C), Part A's
 drift term alone is ±10 mg — **0.574° of apparent tilt, which exceeds the entire ±0.5°
-requirement**. Part B's is ±2 mg, or 0.115°. Full RSS budgets: **Part A 10.03 mg = 0.574°
+requirement**. Part B's is ±2 mg, or 0.115°. Full RSS budgets: **Part A 10.02 mg = 0.574°
 (FAILS); Part B 2.13 mg = 0.122° (passes with 4× margin).**
 Part A resolves 8× finer than Part B and still cannot do the job — and Part B's 0.488 mg/LSB
 already resolves 0.028° of tilt, eighteen times finer than required, so resolution was never

@@ -397,7 +397,7 @@ Now hand out the datasheets.
 
 # ───────────────────────────────────────────────────────── 15  the hunt
 s = S()
-heading(s, "The hunt", "Pairs · 8 minutes · write the page number next to every answer")
+heading(s, "The hunt", "ISM330DHCX datasheet · pairs · 8 minutes · write the page number beside every answer")
 hunt = [("1", "Supply voltage range — and the separate I/O supply, if there is one"),
         ("2", "Sensitivity at EACH selectable full-scale range"),
         ("3", "Zero-offset level AND its temperature coefficient"),
@@ -611,7 +611,7 @@ rows = [["Term", "Part A", "Part B", "Where it came from"],
         ["Noise  (100 µg/√Hz × √50 Hz)", "0.707", "0.707", "datasheet × your bandwidth"],
         ["Quantisation  (LSB/√12)", "0.018", "0.141", "resolution and full scale"],
         ["Offset drift  (TC × ΔT)", "10.000", "2.000", "temp. coefficient × 20 °C"],
-        ["TOTAL  (RSS)", "10.03", "2.13", "√(sum of squares)"],
+        ["TOTAL  (RSS)", "10.02", "2.13", "√(sum of squares)"],
         ["AS A TILT ANGLE", "0.574°", "0.122°", "asin(mg / 1000)"],
         ["AGAINST ±0.5°", "FAILS", "passes, 4× margin", "the requirement"]]
 t = table(s, M, Inches(2.08), CONTENT_W, rows, [0.36, 0.15, 0.19, 0.30], size=16,
@@ -633,13 +633,66 @@ TIMING: 1:02–1:06. Reveal row by row if your tooling allows; otherwise walk do
 with the cursor and make them predict the total before you say it.
 
 Say the RSS rule and why: independent random terms add in quadrature, so the
-LARGEST term dominates completely. 10 and 0.7 combine to 10.03 — the noise
+LARGEST term dominates completely. 10 and 0.7 combine to 10.02 — the noise
 term you spent six minutes on has changed the answer by three hundredths.
 
 "That is the most important lesson in error budgeting: find the biggest term
 first. Everything else is decoration."
 
 Then the two bottom rows, slowly. FAILS. Passes with fourfold margin.
+""")
+
+
+# ───────────────────────────────────────── 24  the real part: typ vs max
+s = S()
+heading(s, "Now the part on your bench",
+        "ISM330DHCX · the same budget, run twice from its own datasheet")
+rows = [["Term", "using TYP", "using MAX", "from DS13012 Rev 6"],
+        ["Noise density", "60 µg/√Hz", "100 µg/√Hz", "both printed, same row"],
+        ["Noise, × √50 Hz", "0.424", "0.707", "your bandwidth"],
+        ["Quantisation, LSB/√12", "0.018", "0.018", "16-bit, ±2 g"],
+        ["Offset drift TC", "±0.1 mg/°C", "±0.5 mg/°C", "both printed, same row"],
+        ["Drift, × 20 °C", "2.000", "10.000", "0–40 °C, cal at 20 °C"],
+        ["TOTAL (RSS)", "2.05", "10.02", "√(sum of squares)"],
+        ["AS A TILT ANGLE", "0.117°", "0.574°", "asin(mg/1000)"],
+        ["AGAINST ±0.5°", "passes, 4× margin", "FAILS", "the requirement"]]
+t = table(s, M, Inches(2.02), CONTENT_W, rows, [0.26, 0.20, 0.20, 0.34], size=14,
+          row_h=Inches(0.42), head_size=14, mono_cols=(1, 2))
+for i in (6, 7, 8):
+    for j, col in ((1, TEAL_L), (2, RED_L)):
+        c = t.cell(i, j)
+        c.fill.solid(); c.fill.fore_color.rgb = col
+        c.text_frame.paragraphs[0].runs[0].font.bold = True
+box(s, M, Inches(6.02), CONTENT_W, Inches(0.78),
+    "One part number. One datasheet. Two columns — and the requirement sits between them.",
+    fill=DARK, edge=DARK, tcolor=CREAM, size=21, bold=True)
+D.notes(s, """
+TIMING: insert at 1:06–1:09 (push the reveal and the decision table back by three
+minutes; if short of time, cut Part C from the team table instead).
+
+THIS IS THE STRONGEST SLIDE IN THE LECTURE. Parts A and B were teaching devices. This
+is the actual component in their kit, and its own two published columns straddle the
+pass/fail line.
+
+Say it plainly: "A typical ISM330DHCX meets our requirement with fourfold margin. A part
+at the limit of its own specification misses it. Both are in spec. Both ship in the same
+reel. Nobody is cheating."
+
+Then the engineering question, and take answers:
+  "So which column do you design with?"
+
+  - Guaranteeing the spec  -> the MAX column, and this design does not close. You must
+    narrow the temperature range, compensate offset against temperature (Lecture 14),
+    or renegotiate the 0.5 degrees.
+  - Ten units you can each measure -> typ plus per-unit calibration is defensible,
+    PROVIDED you write down that you made that choice.
+  - Never: budget with typ and call the result a guarantee.
+
+Close on: "A datasheet does not describe your device. It describes the population your
+device was drawn from."
+
+Note for you: Part A's numbers were essentially this part's worst case, Part B's its
+typical case. If a student spots that, they have understood the whole lecture.
 """)
 
 
@@ -706,7 +759,7 @@ Two teams read their sentence aloud. Insist on the form: Part, then the dominant
 term. "Because it is better" is not an answer.
 
 IF A TEAM CHOOSES C: do not correct it — ask "what did the customer get for the
-extra €4,850?" (500 units × €9.70.) Let them find it. Over-specification is a
+extra €3,650?" (500 units × €7.30 over Part B.) Let them find it. Over-specification is a
 real failure mode and this is the only place in the pilot that teaches it.
 
 IF SHORT OF TIME: drop Part C, run it with two candidates in 5 minutes, set the
@@ -796,7 +849,7 @@ heading(s, "Four things to keep")
 keeps = [("01", "Turn the requirement into a number before you read any datasheet.",
           "0.5° became 8.73 mg, and 8.73 mg decided everything that followed."),
          ("02", "Find the dominant term. Everything else is decoration.",
-          "10 mg and 0.7 mg combine to 10.03 mg. The small term never mattered."),
+          "10 mg and 0.7 mg combine to 10.02 mg. The small term never mattered."),
          ("03", "Resolution is not accuracy, and neither is precision.",
           "Systematic → calibration. Random → bandwidth. Drift → component choice."),
          ("04", "A number without its conditions is not a number.",

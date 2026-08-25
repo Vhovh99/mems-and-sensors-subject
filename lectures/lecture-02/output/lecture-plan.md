@@ -23,15 +23,30 @@ outdoors, 0–40 °C, calibrated once at 20 °C.**
 | Noise, 100 µg/√Hz × √50 Hz | 0.707 mg | 0.707 mg |
 | Quantisation, LSB/√12 | 0.018 mg | 0.141 mg |
 | Offset drift, TC × ΔT(±20 °C) | **10.000 mg** | **2.000 mg** |
-| **Total (RSS)** | **10.03 mg** → **0.574°** | **2.13 mg** → **0.122°** |
+| **Total (RSS)** | **10.02 mg** → **0.574°** | **2.13 mg** → **0.122°** |
 | Against ±0.5° | **FAILS** | passes, 4× margin |
 
 Part A resolves **8× finer** and fails. Part B's 0.488 mg/LSB already resolves 0.028°,
 **18× finer than required** — so resolution was never the deciding variable.
 
 All Part A / B / C figures are *representative* commercial values, chosen so the
-arithmetic is exact, and are not attributed to a named product. Named parts appear only
-in the datasheet hunt, where students read the actual PDF.
+arithmetic is exact, and are not attributed to a named product.
+
+**Slide 24 then runs the identical budget on the real kit part, the ISM330DHCX**, using
+its own published `typ` and `max` columns (DS13012 Rev 6):
+
+| | using typ | using max |
+|---|---|---|
+| Noise (60 / 100 µg/√Hz × √50 Hz) | 0.424 mg | 0.707 mg |
+| Quantisation | 0.018 mg | 0.018 mg |
+| Drift (±0.1 / ±0.5 mg/°C × 20 °C) | 2.000 mg | 10.000 mg |
+| **Total → angle** | **2.05 mg → 0.117°** | **10.02 mg → 0.574°** |
+| Against ±0.5° | passes, 4× margin | **FAILS** |
+
+One part number, one datasheet, and the requirement sits between its two columns. Part A's
+figures were essentially this part's worst case and Part B's its typical case — so the
+fictional comparison and the real one teach the same lesson, and the real one is harder to
+dismiss.
 
 ## Authoritative timeline
 
@@ -52,11 +67,12 @@ in the datasheet hunt, where students read the actual PDF.
 | 00:46–00:52 | 18–19 | **C3a** | noise = density × √bandwidth |
 | 00:52–00:57 | 20–21 | **Poll 3** | ConcepTest: the calculation · **most diagnostic item** |
 | 00:57–01:06 | 22–23 | **C3b** | Quantisation, offset, drift · the full error budget |
-| 01:06–01:09 | 24–25 | **Reveal** | Poll 1 answered · the verdict |
-| 01:09–01:15 | 26 | C3c | Team decision table, three candidates |
-| 01:15–01:18 | 27–28 | **Poll 4** | Transfer: outdoor tank level |
-| 01:18–01:19 | 29 | Rule | The course's component-selection rule |
-| 01:19–01:20 | 30–32 | Close | Summary · exit ticket · Lab 1 tomorrow |
+| 01:06–01:09 | **24** | **The real part** | **ISM330DHCX: the same budget at `typ` and at `max`** |
+| 01:09–01:11 | 25–26 | **Reveal** | Poll 1 answered · the verdict |
+| 01:11–01:16 | 27 | C3c | Team decision table (drop Part C if running late) |
+| 01:16–01:18 | 28–29 | **Poll 4** | Transfer: outdoor tank level |
+| 01:18–01:19 | 30 | Rule | The course's component-selection rule |
+| 01:19–01:20 | 31–33 | Close | Summary · exit ticket · Lab 1 tomorrow |
 
 **Attention resets:** 02, 07, 18, 33, 44, 52, 66, 75 min. Longest passive stretch
 **9 minutes** (00:57–01:06, the error budget) — and it is arithmetic the students have
@@ -77,7 +93,7 @@ multi-vendor catalogue comparison.
 
 ## Materials
 
-- `L2-sensor-specifications-and-selection.pptx` — 32 slides, speaker notes on all
+- `L2-sensor-specifications-and-selection.pptx` — 33 slides, speaker notes on all
 - `activities.md` — five polls with per-distractor diagnostics, hunt, decision table
 - **Two real datasheets per pair** — printed extracts or laptops. Use the actual lab-kit
   parts so the skill transfers straight into Lab 1

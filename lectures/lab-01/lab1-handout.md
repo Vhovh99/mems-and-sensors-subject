@@ -32,7 +32,7 @@ made a number.
 ## Equipment
 
 - STM32 Nucleo board (**pre-flashed**), USB cable
-- I²C inertial sensor breakout, assigned per bench
+- **ST ISM330DHCX** 6-axis IMU breakout, assigned per bench
 - Breadboard, jumper wires, pull-up resistors if your breakout lacks them
 - Multimeter
 - Serial terminal at **115200 8N1**, and a spreadsheet
@@ -67,6 +67,11 @@ console banner. Press Enter to get a `>` prompt, then type `help`.
 
 Compare with your pre-lab B4. If the address that answers is not the one you predicted,
 find out why **before** going further — the answer is usually a strap pin.
+
+> **A warning that saves an hour.** On this part the device-ID *value* happens to be
+> the same number as one of its possible I²C *addresses*. They are unrelated: one is
+> the contents of a register, the other is who you are talking to. If you find yourself
+> reasoning "the address is right because the ID is right", stop and separate the two.
 
 **1.5** Read the device-ID register (pre-lab B5):
 

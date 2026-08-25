@@ -18,85 +18,117 @@
 > `../shared/imu-driver-for-later-labs/`. See `../instructor-guide.md` §9 for the
 > proposed microcontroller on-ramp across Labs 1–8.
 
-> ## ⚠ VERIFY BEFORE YOU TEACH
-> The register values below are for the **LSM6DSO / LSM6DSOX / LSM6DSO32 family**,
-> which is the class of part the semester plan's sensing kit specifies. They are
-> given so you have a working answer key on the bench.
+> ## ✅ VERIFIED AGAINST THE DATASHEET
+> The part is the **ST ISM330DHCXTR** — iNEMO 6-axis IMU, industrial grade, LGA-14L.
+> Every register value and electrical figure below was read from
+> **datasheet DS13012 Rev 6** on 2026-08-25 and the arithmetic was checked by
+> computation.
 >
-> **Check every one against the datasheet revision for the exact part on your
-> benches before the session, and correct this file.** Register maps differ between
-> families and occasionally between revisions of the same family.
->
-> This is not boilerplate caution. In a course whose central lesson is *"read the
-> conditions, do not trust an unsourced number"*, an unverified answer key would be
-> the worst possible thing to hand a demonstrator.
+> Two things still want your own eyes before the session:
+> 1. **Confirm the datasheet revision** you hand to students matches DS13012 Rev 6
+>    (ST revises; the register map is stable but check).
+> 2. **Confirm the I²C address on your specific breakout board.** The address depends
+>    on how the board straps SDO/SA0, and vendors differ. The console's `scan` command
+>    settles it in two seconds at the bench — which is why stage 1.4 of the handout runs
+>    `scan` before anything else.
 
 ---
 
-## Answer key — LSM6DSO-family accelerometer
+## Answer key — ISM330DHCX  *(DS13012 Rev 6)*
 
-| Pre-lab | Quantity | Value |
+### Pre-lab section B
+
+| B | Quantity | Value |
 |---|---|---|
-| B4 | 7-bit I²C address | `0x6A` with SDO/SA0 tied low; `0x6B` tied high |
-| — | HAL address (7-bit ≪ 1) | `0xD4` / `0xD6` |
-| B5 | `WHO_AM_I` register | `0x0F`, returns `0x6C` |
-| B6 | Accelerometer control | `CTRL1_XL` = `0x10` |
-| B7 | Full-scale field | `FS_XL[1:0]`, bits 3:2 of `CTRL1_XL` |
-| B8 | ODR field | `ODR_XL[3:0]`, bits 7:4 of `CTRL1_XL` |
-| B10 | First output register | `OUTX_L_A` = `0x28` |
-| B11 | Data format | 16-bit two's complement, **little-endian** (low byte at the lower address) |
-| 2.2 | Auto-increment | `IF_INC`, bit 2 of `CTRL3_C` (`0x12`) — **set by default after reset on this family**, which is worth pointing out |
+| 1 | Supply voltage V_DD | **1.71 – 3.6 V** (1.8 V typ). Use the board's 3V3. |
+| 2 | I/O supply V_DDIO | **1.62 – 3.6 V**. Logic thresholds are ratiometric: V_IH = 0.7·V_DDIO, V_IL = 0.3·V_DDIO |
+| 3 | Absolute maximum on V_DD | **−0.3 to 4.8 V**; on any input pin, −0.3 V to V_DDIO + 0.3 V |
+| 4 | I²C 7-bit address | **`0x6A`** with SDO/SA0 to GND, **`0x6B`** with SDO/SA0 to V_DDIO. Datasheet: SAD = `110101x`b |
+| 5 | Device-ID register | **`WHO_AM_I` = `0x0F`**, fixed read-only value **`0x6B`** |
+| 6 | Accelerometer control register | **`CTRL1_XL` = `0x10`**, reset default `0x00` (power-down) |
+| 7 | Full-scale field | **`FS[1:0]_XL`, bits 3:2** of `CTRL1_XL` — see the encoding below |
+| 8 | ODR field | **`ODR_XL[3:0]`, bits 7:4** of `CTRL1_XL` |
+| 9 | Sensitivity | ±2 g → **0.061**; ±4 g → **0.122**; ±8 g → **0.244**; ±16 g → **0.488 mg/LSB** |
+| 10 | First output register | **`OUTX_L_A` = `0x28`** (through `OUTZ_H_A` = `0x2D`, so six bytes from `0x28`) |
+| 11 | Output format | **16-bit two's complement, little-endian** (low byte at the lower address) |
 
-### The full-scale encoding — the deliberate trap
+`CTRL1_XL` bit layout, from Table 41:
 
 ```
-FS_XL[1:0]      range      sensitivity
-   00           ±2 g       0.061 mg/LSB
-   01           ±16 g      0.488 mg/LSB     <-- not in ascending order
-   10           ±4 g       0.122 mg/LSB
-   11           ±8 g       0.244 mg/LSB
+ bit   7        6        5        4        3       3:2      1           0
+     ODR_XL3  ODR_XL2  ODR_XL1  ODR_XL0  FS1_XL  FS0_XL  LPF2_XL_EN   0
 ```
 
-A student who assumes `01` means ±4 g configures ±16 g, then applies the ±4 g
-sensitivity, and reads a magnitude of about **250 mg** instead of 1000. The number is
-stable, repeatable and completely wrong — which makes it a much better teaching moment
-than a crash.
+Bit 0 **must be written 0** for correct operation — the datasheet says so explicitly, and
+it is a good thing to make a student notice.
+
+### The full-scale encoding — the trap, and it is real
+
+```
+FS[1:0]_XL      range      sensitivity
+    00          ±2 g       0.061 mg/LSB      <- reset default
+    01          ±16 g      0.488 mg/LSB      <- NOT in ascending order
+    10          ±4 g       0.122 mg/LSB
+    11          ±8 g       0.244 mg/LSB
+```
+
+This is quoted verbatim from Table 42 of DS13012 Rev 6. A student who assumes `01` means
+±4 g actually configures ±16 g, then applies the ±4 g sensitivity, and reads a magnitude
+of about **250 mg** instead of 1000 — stable, repeatable, and completely wrong.
 
 **Do not warn them beyond what the handout already says.** Let it happen, then ask:
-"Your reading is stable to a tenth of a milli-g. Is it right?"
+*"Your reading is stable to a tenth of a milli-g. Is it right?"*
 
-### Pre-lab C5 answer key  *(bytes `00 00  30 FC  00 40`, ±2 g, 0.061 mg/LSB)*
+### ODR encoding (Table 43) and the values for this lab
 
-| Axis | bytes (lo, hi) | raw int16 | mg |
-|---|---|---|---|
-| X | `00 00` | 0 | 0.0 |
-| Y | `30 FC` | **−976** | **−59.5** |
-| Z | `00 40` | 16384 | 999.4 |
-
-Magnitude = **1001.2 mg** → plausible for a stationary sensor.
-
-Y is the whole point of the exercise: `0xFC30` = 64560, and 64560 − 65536 = −976. A
-student who skips that subtraction reports +3939 mg on the Y axis and a magnitude of
-about 4065 mg, which is impossible for a resting sensor — and that impossibility is
-what should make them check.
-
-### Configuration values for this lab
+`ODR_XL[3:0]`: `0000` power-down · `0011` 52 Hz · **`0100` 104 Hz** · `0101` 208 Hz.
 
 | Goal | `CTRL1_XL` | Meaning |
 |---|---|---|
-| ±2 g, 104 Hz | `0x40` | `ODR_XL = 0100` (104 Hz), `FS_XL = 00` (±2 g) |
-| ±16 g, 104 Hz | `0x44` | `ODR_XL = 0100`, `FS_XL = 01` (±16 g) — for step 2.4 |
+| ±2 g, 104 Hz | **`0x40`** | ODR `0100`, FS `00`, LPF2 off, bit 0 = 0 |
+| ±16 g, 104 Hz | **`0x44`** | ODR `0100`, FS `01` — for handout step 2.4 |
 
-Reset default is power-down (`ODR_XL = 0000`), so a device that reads its ID correctly
-but returns all-zero data has simply not been enabled. Expect this; it is on the
-troubleshooting table.
+Reset default is power-down, so **a device that reads its ID correctly but returns
+all-zero data has simply not been enabled.** Expect this; it is on the troubleshooting
+table.
 
-### Expected values at rest, ±2 g, sensor flat with Z up
+### Auto-increment — already on
+
+`IF_INC` is **bit 2 of `CTRL3_C` (`0x12`)**, and `CTRL3_C`'s reset default is **`0x04`** —
+so auto-increment is **enabled out of reset** on this part. The console's `dump` command
+therefore works without any configuration.
+
+This is worth pointing out rather than hiding: it is a case where the sensible default
+saved you, and where a different part in the same family might not have.
+
+### Electrical figures students will meet in Lecture 2
+
+| Parameter | Min | **Typ** | Max | Unit |
+|---|---|---|---|---|
+| Acceleration noise density, high-performance mode | | **60** | 100 | µg/√Hz |
+| Zero-g level offset accuracy | −65 | **±10** | +65 | mg |
+| Zero-g level change vs. temperature | −0.5 | **±0.1** | +0.5 | mg/°C |
+| Linear acceleration sensitivity tolerance | −2 % | | +2 % | |
+| Sensitivity change vs. temperature (−40 to +105 °C) | −0.01 | ±0.005 | +0.01 | %/°C |
+| Cross-axis sensitivity (**at 25 °C only**) | | ±0.5 | | % |
+| Operating temperature range | −40 | | +105 | °C |
+
+Gyroscope, for Labs 3 and 4: ±125/250/500/1000/2000/4000 dps; 4.375 to 140 mdps/LSB;
+zero-rate level ±1 dps typ (±3 max); rate noise density 5 mdps/√Hz; angular random walk
+0.21 °/√h; bias instability 3 °/h. The FIFO is 9 kB.
+
+**The cross-axis row is the one to notice.** It is specified *at 25 °C, for the packaged
+die*. It says nothing about your board after reflow — which is exactly the point Lecture 2
+makes at minute 41, and it is now demonstrable on the students' own datasheet.
+
+### Expected values at rest### Expected values at rest, ±2 g, sensor flat with Z up
 
 - `raw_z` ≈ **+16 300 to +16 500** (1000 mg ÷ 0.061 mg/LSB ≈ 16 393)
-- `raw_x`, `raw_y` ≈ **−300 to +300** (uncalibrated offset, tens of mg — this *is* the
-  zero-g offset from Lecture 2, seen for the first time on real silicon)
-- magnitude **970–1030 mg** typical for an uncalibrated consumer part
+- `raw_x`, `raw_y`: the datasheet's zero-g offset accuracy is ±10 mg typ, so expect
+  roughly **±160 counts typ** and up to **±1070 counts** at the ±65 mg limit. This *is*
+  the zero-g offset from Lecture 2, seen for the first time on real silicon
+- magnitude **970–1030 mg** for a typical part; a part near the offset limit can sit
+  further out and still be in specification — which is itself worth saying aloud
 
 If a team gets magnitude within 2 mg of 1000 on the first try, be slightly suspicious
 and ask to see the raw codes.

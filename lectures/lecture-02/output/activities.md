@@ -53,7 +53,7 @@ Error budget at 50 Hz bandwidth, calibrated at 20 °C, ambient 0–40 °C so ΔT
 | Noise, `100 µg/√Hz × √50 Hz` | 0.707 mg | 0.707 mg |
 | Quantisation, `LSB/√12` | 0.018 mg | 0.141 mg |
 | Offset drift, `TC × ΔT` | **10.0 mg** | **2.0 mg** |
-| **Total (RSS)** | **10.03 mg** | **2.13 mg** |
+| **Total (RSS)** | **10.02 mg** | **2.13 mg** |
 | **As an angle** | **0.574°** | **0.122°** |
 | **Verdict against ±0.5°** | ❌ **FAILS** | ✅ passes, 4× margin |
 
@@ -126,8 +126,9 @@ That rule is the spine of Lecture 14 and of Labs 3 and 5. Repeat it at the end o
 Pairs, one real datasheet PDF per pair (printed extract or on a laptop). Use the **actual
 device in the lab kit** so the skill transfers directly to Lab 1 in Week 2.
 
-**Recommended:** a 6-axis IMU (LSM6DSO-family class) and a barometric pressure sensor
-(BMP390 class) — the parts the plan's sensing kit already specifies.
+**Use the actual part: ST ISM330DHCXTR** (iNEMO 6-axis IMU, datasheet DS13012 Rev 6) —
+the IMU in the course kit. Every number the students find here they will type into the
+console in Week 2, which is what makes the hunt worth doing.
 
 **Six numbers to find (8 minutes, written down with page numbers):**
 
@@ -205,7 +206,7 @@ Fill and commit:
 
 **Part C is a deliberate trap in the other direction:** it is technically the best part and it
 costs 6× Part B while adding no capability the requirement needs. Over-specifying is also an
-engineering failure. If a team picks C, ask: "What did the customer get for the extra €4,850?"
+engineering failure. If a team picks C, ask: "What did the customer get for the extra €3,650?"
 
 **Closing rule (min 70), quoted from the course plan itself:**
 > *"Avoid selecting a part only because an Arduino library exists; students must still see the

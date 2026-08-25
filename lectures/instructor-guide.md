@@ -33,7 +33,7 @@ Each session has one idea. If you remember nothing else at the lectern, protect 
 | Session | The one thing | Where it resolves |
 |---|---|---|
 | **Lecture 1** | A measurement is a *chain*, and it begins before the sensor. Some losses are permanent. | Minute 70: the motor's 1520 Hz fault aliased to exactly 20 Hz by a 100 Hz sample rate |
-| **Lecture 2** | Selection is arithmetic against a requirement, not a comparison of headlines. | Minute 66: Part A resolves 8× finer and fails, because a 10 mg drift term beats an 8.73 mg measurand |
+| **Lecture 2** | Selection is arithmetic against a requirement, not a comparison of headlines. | Minute 66: Part A resolves 8× finer and fails, because a 10 mg drift term beats an 8.73 mg measurand — then minute 106 lands it on the real ISM330DHCX, which passes at `typ` and fails at `max` |
 | **Laboratory 1** | Two claims: *this is the device I think it is*, and *this number is true*. | The `WHO_AM_I` handshake and the 1 g test |
 
 Both lectures are built as mysteries with withheld answers. **The single most damaging
@@ -203,15 +203,20 @@ and Լ1. **Before building Lectures 5–16, decide whether the ծրագիր will
 revised or an explicit mapping annex produced.** This is a paperwork problem, not a
 teaching problem, but it is easier to solve in September than in June.
 
-**7.2 · Verify the Lab 1 answer key, and flash the boards.** `lab-01/instructor-notes.md`
-carries register values for the LSM6DSO family so you have a working key at the bench.
-**Check every one against the datasheet revision for the exact part on your benches, and
-correct that file.** In a course whose central lesson is *read the conditions, do not
-trust an unsourced number*, an unverified answer key would be the worst possible artefact
-to hand a demonstrator.
+**7.2 · ~~Verify the Lab 1 answer key~~ — done. Now flash the boards.** The IMU is the
+**ST ISM330DHCXTR**, and `lab-01/instructor-notes.md` now carries a fully verified answer
+key read from datasheet **DS13012 Rev 6**: register addresses, the `CTRL1_XL` bit layout,
+the (non-ascending) full-scale encoding, ODR codes, sensitivities, and the electrical
+figures Lecture 2 uses. All arithmetic was checked by computation.
 
-Then build `lab-01/console-firmware/` once and flash every board — this is now on the
-critical path for Lab 1, and it wants doing a day early, not on the morning.
+Two small things remain yours:
+1. **Confirm the datasheet revision** you hand to students is DS13012 Rev 6.
+2. **Confirm the I²C address on your specific breakout** — it depends on how the board
+   straps SDO/SA0, and vendors differ. `scan` settles it at the bench in two seconds,
+   which is why handout stage 1.4 runs it first.
+
+Then build `lab-01/console-firmware/` once and flash every board. This is on the critical
+path for Lab 1 and wants doing a day early, not on the morning.
 
 ---
 
@@ -238,7 +243,32 @@ path, amber = where error enters, red = the term that kills the design.**
 
 ---
 
-## 9 · The microcontroller on-ramp
+## 9 · Teaching in Armenian
+
+Both decks exist in Armenian: `L1-…-HY.pptx` and `L2-…-HY.pptx`, alongside the English
+originals. Slide text is translated; **speaker notes remain in English**, since they are
+your working notes rather than student material.
+
+Terminology follows the accredited 2024 ծրագիր wherever that document fixes a term —
+տվիչ, ակտուատոր, ունակային, աքսելերոմետր, գիրոսկոպ, ազդանշան, ուժեղարար, ֆիլտր,
+ԱԹԿ, ընդհատում — so the vocabulary matches what your department already approved.
+Words students will meet in an ST datasheet are glossed in English on first use or left
+in Latin outright (`datasheet`, `ODR`, `FIFO`, `LSB`, `RMS`, `0x6B`).
+
+**Before you teach from them, read `tools/i18n/GLOSSARY-hy.md`.** It flags three terms
+that genuinely want your judgement — ճշտություն / ճշգրտություն / լուծունակություն for
+accuracy / precision / resolution — because Lecture 2 turns on exactly that distinction
+and Armenian engineering usage is not fully settled. Changing a term in the dictionary
+and rerunning the translator updates every slide in both lectures at once, which is why
+the translation is generated rather than hand-edited.
+
+One practical note: Armenian runs 10–25 % longer than English, so a few strings were
+shortened to fit their boxes and the translator eases the point size down where a string
+grew. If you lengthen a translation, re-render and check that slide.
+
+---
+
+## 10 · The microcontroller on-ramp
 
 ### 9.1 · The gap
 

@@ -1,0 +1,9 @@
+build/
+mx.scratch/
+!.settings
+*.swp
+*.swo
+*.tmp
+*.bak
+*~
+.DS_Store

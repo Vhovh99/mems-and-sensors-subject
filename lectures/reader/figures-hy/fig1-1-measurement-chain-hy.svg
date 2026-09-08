@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1860" height="690" viewBox="0 0 1860 690">
+  <defs><filter id="s"><feDropShadow dx="3" dy="5" stdDeviation="4" flood-opacity=".25"/></filter><marker id="a" markerUnits="userSpaceOnUse" markerWidth="24" markerHeight="24" refX="22" refY="12" orient="auto"><path d="M0,0 L24,12 L0,24 Z" fill="#09828d"/></marker></defs>
+  <rect width="1860" height="690" fill="#f8f6f2"/>
+  <g font-family="DejaVu Sans,Arial" fill="#20252b" text-anchor="middle" font-size="27" font-weight="700">
+    <g filter="url(#s)" fill="#fff" stroke="#07808a" stroke-width="3"><rect x="32" y="82" width="365" height="155" rx="16"/><rect x="473" y="82" width="365" height="155" rx="16"/><rect x="914" y="82" width="365" height="155" rx="16"/><rect x="1355" y="82" width="365" height="155" rx="16"/><rect x="1355" y="374" width="365" height="155" rx="16"/><rect x="914" y="374" width="365" height="155" rx="16"/><rect x="473" y="374" width="365" height="155" rx="16"/></g>
+    <text x="214" y="150"><tspan x="214">ՖԻԶԻԿԱԿԱՆ</tspan><tspan x="214" dy="36">ՄԵԾՈՒԹՅՈՒՆ</tspan></text>
+    <text x="655" y="150"><tspan x="655">ՄԵԽԱՆԻԿԱԿԱՆ</tspan><tspan x="655" dy="36">ԿԱՊԱԿՑՈՒՄ</tspan></text>
+    <text x="1096" y="171">ՓՈԽԱԿԵՐՊՈՒՄ</text>
+    <text x="1537" y="150"><tspan x="1537">ԱՆԱԼՈԳԱՅԻՆ</tspan><tspan x="1537" dy="36">ՄՇԱԿՈՒՄ</tspan></text>
+    <text x="1537" y="442"><tspan x="1537">ՆՄՈՒՇԱՌՈՒՄ ԵՎ</tspan><tspan x="1537" dy="36">ՔՎԱՆՏԱՑՈՒՄ</tspan></text>
+    <text x="1096" y="442"><tspan x="1096">ԿՈԴԵՐ → ՄՄ</tspan><tspan x="1096" dy="36">ՄԻԱՎՈՐՆԵՐ</tspan></text>
+    <text x="655" y="432"><tspan x="655">ԺԱՄԱՆԱԿԱՅԻՆ ԴՐՈՇՄ,</tspan><tspan x="655" dy="36">ԳՐԱՆՑՈՒՄ, ՈՐՈՇՈՒՄ</tspan></text>
+  </g>
+  <g font-family="DejaVu Sans" font-size="20" font-weight="700" fill="#087e88"><text x="45" y="108">1</text><text x="486" y="108">2</text><text x="927" y="108">3</text><text x="1368" y="108">4</text><text x="1368" y="400">5</text><text x="927" y="400">6</text><text x="486" y="400">7</text></g>
+  <g stroke="#09828d" stroke-width="15" marker-end="url(#a)"><line x1="405" y1="159" x2="458" y2="159"/><line x1="846" y1="159" x2="899" y2="159"/><line x1="1287" y1="159" x2="1340" y2="159"/><line x1="1537" y1="257" x2="1537" y2="356"/><line x1="1340" y1="451" x2="1287" y2="451"/><line x1="899" y1="451" x2="846" y2="451"/><line x1="458" y1="451" x2="405" y2="451"/></g>
+</svg>

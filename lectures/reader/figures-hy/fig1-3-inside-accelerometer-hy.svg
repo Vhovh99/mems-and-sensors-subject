@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1860" height="525" viewBox="0 0 1860 525">
+  <defs><filter id="s"><feDropShadow dx="3" dy="5" stdDeviation="4" flood-opacity=".25"/></filter></defs><rect width="1860" height="525" fill="#f8f6f2"/>
+  <g filter="url(#s)"><rect x="435" y="60" width="960" height="64" fill="#dfddda" stroke="#63717b" stroke-width="2"/><rect x="435" y="401" width="960" height="64" fill="#dfddda" stroke="#63717b" stroke-width="2"/><rect x="614" y="200" width="602" height="130" fill="#d7ebef" stroke="#087f89" stroke-width="4"/></g>
+  <g font-family="DejaVu Sans" fill="#20252b" text-anchor="middle" font-weight="700"><text x="915" y="102" font-size="27">ԱՆՇԱՐԺ ԹԻԹԵՂ</text><text x="915" y="444" font-size="27">ԱՆՇԱՐԺ ԹԻԹԵՂ</text><text x="915" y="279" font-size="34">ԻՆԵՐՏ ԶԱՆԳՎԱԾ՝ m</text></g>
+  <g fill="none" stroke="#087f89" stroke-width="5"><path d="M480 202 l105 16 -105 16 105 16 -105 16 105 16 -105 16 105 16"/><path d="M1260 202 l105 16 -105 16 105 16 -105 16 105 16 -105 16 105 16"/></g>
+  <g font-family="DejaVu Sans" font-size="25" fill="#087f89" font-weight="700"><text x="308" y="245">ԿԱԽՈՑԻ</text><text x="333" y="283">ՀԵԾԱՆՆԵՐ՝ k</text><text x="1387" y="245">ԿԱԽՈՑԻ</text><text x="1387" y="283">ՀԵԾԱՆՆԵՐ՝ k</text></g>
+  <g font-family="DejaVu Sans Mono" font-size="27" fill="#d97706" font-weight="700"><text x="1418" y="172">բացակ d ≈ 1–2 մկմ</text><text x="1418" y="370">բացակ d</text></g>
+</svg>

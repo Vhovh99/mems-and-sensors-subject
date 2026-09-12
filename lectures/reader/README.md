@@ -8,10 +8,22 @@ that decision.
 
 | File | What it is |
 |---|---|
-| `course-reader-ch1-2.pdf` | **The deliverable** — 21 pages, A4, ready to hand out |
+| `course-reader.pdf` | **The English deliverable** — Chapters 1–4, 51 pages, A4 |
+| `course-reader-hy.pdf` | **The Armenian deliverable** — Chapters 1–2 so far |
 | `ch01-the-measurement-chain.md` | Chapter 1 source |
 | `ch02-specifications-and-selection.md` | Chapter 2 source |
+| `ch03-trustworthy-samples.md` | Chapter 3 source |
+| `ch04-structures-and-fabrication.md` | Chapter 4 source |
+| `ch0*-hy.md` | the Armenian chapters |
 | `figures/` | Figures, cropped automatically from the lecture decks |
+| `figures-hy/` | Armenian figure variants |
+
+`course-reader-ch1-2.pdf`, `lecture-1.pdf` and `lecture-2.pdf` are earlier one-off
+builds, superseded by the two PDFs above. They can be deleted.
+
+**Chapters 3 and 4 have no Armenian version yet.** They are the next translation job, and
+unlike Chapters 1 and 2 they should not need re-terminologising: they were written against
+`tools/i18n/GLOSSARY-hy.md`, which is now the course's single source of truth for terms.
 
 ## Chapter template
 
@@ -35,8 +47,13 @@ validation), which no textbook covers and which must be written from scratch.
 ```bash
 cd lectures/tools
 .venv/bin/python extract_figures.py     # re-crop figures from the decks
-.venv/bin/python build_reader.py        # -> reader/course-reader-ch1-2.pdf
+.venv/bin/python build_reader.py        # -> course-reader.pdf AND course-reader-hy.pdf
 ```
+
+`build_reader.py` splits the chapters by language: `chNN-*.md` builds the English PDF and
+`chNN-*-hy.md` the Armenian one. They must not be mixed — and until September 2026 they
+were, because the glob was simply `ch*.md`. The Armenian build also overrides the type to
+DejaVu, since Georgia and Arial carry no Armenian glyphs.
 
 `build_reader.py` picks up every `reader/ch*.md` in filename order, so adding
 `ch03-....md` is all that is needed to extend the book. Change the output filename in

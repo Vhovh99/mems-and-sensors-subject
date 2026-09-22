@@ -13,7 +13,13 @@ import markdown
 from weasyprint import HTML, CSS
 
 READER = "../reader"
-CHAPTERS = sorted(glob.glob(f"{READER}/ch*.md"))
+
+# Chapters come in two languages. The Armenian ones are `chNN-...-hy.md`, and they must
+# not be mixed into the English PDF — which is what happened when the glob was simply
+# `ch*.md`. They also need different fonts: Georgia and Arial carry no Armenian glyphs.
+ALL = sorted(glob.glob(f"{READER}/ch*.md"))
+CHAPTERS_EN = [p for p in ALL if not p.endswith("-hy.md")]
+CHAPTERS_HY = [p for p in ALL if p.endswith("-hy.md")]
 
 CSS_TEXT = """
 @page {
@@ -128,7 +134,7 @@ TITLE = """
   <div style="font-family:Arial;font-size:10pt;color:#0E7C86;font-weight:bold;
               letter-spacing:.08em">MICROELECTROMECHANICAL SYSTEMS AND SENSORS</div>
   <h1>Course reader</h1>
-  <div class="sub">Chapters 1–2 · draft for review</div>
+  <div class="sub">Chapters {{RANGE}} · draft for review</div>
   <div class="rule"></div>
   <div class="meta">
     Bachelor programme · Electrical Engineering · 7th semester<br>
@@ -163,29 +169,54 @@ def render_math(html: str) -> str:
     return re.sub(r"\$\$(.+?)\$\$", sub, html, flags=re.S)
 
 
+# DejaVu renders Armenian, Latin, digits and µ √ ± ° correctly. Noto Sans Armenian is
+# avoided for the same reason the decks avoid it — see i18n/GLOSSARY-hy.md.
+CSS_HY = """
+body, p, li, td, th, h1, h2, h3, h4, .caption, .titlepage .sub,
+.titlepage .meta, .titlepage .note { font-family: "DejaVu Serif", serif !important; }
+h1, h2, h3, h4, th, .caption, .titlepage .sub, .titlepage .meta, .titlepage .note,
+@page { font-family: "DejaVu Sans", sans-serif !important; }
+h1, h2, h3, h4 { font-family: "DejaVu Sans", sans-serif !important; }
+code, pre { font-family: "DejaVu Sans Mono", monospace !important; }
+"""
+
+
 def mark_captions(html: str) -> str:
     """A paragraph opening with <strong>Figure/Table is a caption."""
     return re.sub(r'<p>(<strong>(?:Figure|Table)\b.*?)</p>',
                   r'<p class="caption">\1</p>', html, flags=re.S)
 
 
-parts = [TITLE]
-for path in CHAPTERS:
-    src = open(path).read()
-    # the rule before Answers would otherwise be stranded alone on a page
-    src = src.replace("\n---\n\n## Answers\n", "\n## Answers {: .answers }\n")
-    src = src.replace("\n## Answers\n", "\n## Answers {: .answers }\n")
-    html = markdown.markdown(src, extensions=["tables", "attr_list"])
-    html = render_math(html)
-    html = mark_captions(html)
-    parts.append(html)
+def chapter_range(paths):
+    """"1-4" from the chNN prefixes actually present."""
+    ns = sorted({int(re.search(r"ch(\d+)", os.path.basename(p)).group(1)) for p in paths})
+    return f"{ns[0]}\u2013{ns[-1]}" if len(ns) > 1 else str(ns[0])
 
-doc = f"<html><head><meta charset='utf-8'></head><body>{''.join(parts)}</body></html>"
-out_html = f"{READER}/course-reader-ch1-2.html"
-open(out_html, "w").write(doc)
 
-HTML(string=doc, base_url=READER).write_pdf(
-    f"{READER}/course-reader-ch1-2.pdf", stylesheets=[CSS(string=CSS_TEXT)])
+def build(paths, out_name, lang):
+    if not paths:
+        print(f"· no {lang} chapters, skipping {out_name}")
+        return
+    parts = [TITLE.replace("{{RANGE}}", chapter_range(paths))]
+    for path in paths:
+        src = open(path).read()
+        # the rule before Answers would otherwise be stranded alone on a page
+        src = src.replace("\n---\n\n## Answers\n", "\n## Answers {: .answers }\n")
+        src = src.replace("\n## Answers\n", "\n## Answers {: .answers }\n")
+        src = src.replace("\n## \u054075\u0561\u057f\u0561\u057d\u056d\u0561\u0576\u0576\u0565\u0580\n",
+                          "\n## \u054a\u0561\u057f\u0561\u057d\u056d\u0561\u0576\u0576\u0565\u0580 {: .answers }\n")
+        html = markdown.markdown(src, extensions=["tables", "attr_list"])
+        html = render_math(html)
+        html = mark_captions(html)
+        parts.append(html)
 
-os.remove(out_html)
-print(f"built {READER}/course-reader-ch1-2.pdf from {len(CHAPTERS)} chapters")
+    doc = f"<html><head><meta charset='utf-8'></head><body>{''.join(parts)}</body></html>"
+    sheets = [CSS(string=CSS_TEXT)]
+    if lang == "hy":
+        sheets.append(CSS(string=CSS_HY))
+    HTML(string=doc, base_url=READER).write_pdf(f"{READER}/{out_name}", stylesheets=sheets)
+    print(f"built {READER}/{out_name} from {len(paths)} chapters ({lang})")
+
+
+build(CHAPTERS_EN, "course-reader.pdf", "en")
+build(CHAPTERS_HY, "course-reader-hy.pdf", "hy")

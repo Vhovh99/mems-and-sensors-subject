@@ -1,6 +1,10 @@
-# Instructor guide — Pilot package
-**Lecture 1 · Lecture 2 · Laboratory 1**
+# Instructor guide — Module A
+**Lecture 1 · Lecture 2 · Lecture 3 · Lecture 4 · Laboratory 1**
 Microelectromechanical Systems and Sensors · first offering
+
+Module A of the semester plan is now complete: four lectures and the first laboratory.
+Lectures 1–2 and Laboratory 1 were the pilot; Lectures 3–4 were built afterwards, to the
+same standard and against the terminology the pilot's Armenian review established.
 
 This is the delivery document. Read it once end to end before Lecture 1, then keep it
 open at the lectern for the timing cues and the contingency table.
@@ -26,7 +30,7 @@ in your students. The instrumentation in section 6 is how that changes.
 
 ---
 
-## 2 · The three narrative spines
+## 2 · The narrative spines
 
 Each session has one idea. If you remember nothing else at the lectern, protect these.
 
@@ -34,6 +38,8 @@ Each session has one idea. If you remember nothing else at the lectern, protect 
 |---|---|---|
 | **Lecture 1** | A measurement is a *chain*, and it begins before the sensor. Some losses are permanent. | Minute 70: the motor's 1520 Hz fault aliased to exactly 20 Hz by a 100 Hz sample rate |
 | **Lecture 2** | Selection is arithmetic against a requirement, not a comparison of headlines. | Minute 66: Part A resolves 8× finer and fails, because a 10 mg drift term beats an 8.73 mg measurand — then minute 106 lands it on the real ISM330DHCX, which passes at `typ` and fails at `max` |
+| **Lecture 3** | A sample is trustworthy only if you can say what it is, how much is information, which band it represents, and when it happened. | Minute 66: the 16-bit part gives you 12.4 bits — and the 300 Hz pump is sitting in your data at 12 Hz |
+| **Lecture 4** | A datasheet describes a die. You buy an assembly. | Minute 70: Lecture 2's unanswerable cross-axis question gets a method — measure the last three links yourself |
 | **Laboratory 1** | Two claims: *this is the device I think it is*, and *this number is true*. | The `WHO_AM_I` handshake and the 1 g test |
 
 Both lectures are built as mysteries with withheld answers. **The single most damaging
@@ -245,26 +251,61 @@ path, amber = where error enters, red = the term that kills the design.**
 
 ## 9 · Teaching in Armenian
 
-Both decks exist in Armenian: `L1-…-HY.pptx` and `L2-…-HY.pptx`, alongside the English
-originals. Slide text is translated; **speaker notes remain in English**, since they are
-your working notes rather than student material.
+All four decks exist in Armenian as `L*-HY.pptx` alongside the English originals. Slide
+text is translated; **speaker notes remain in English**, since they are your working
+notes rather than student material.
 
-Terminology follows the accredited 2024 ծրագիր wherever that document fixes a term —
-տվիչ, ակտուատոր, ունակային, աքսելերոմետր, գիրոսկոպ, ազդանշան, ուժեղարար, ֆիլտր,
-ԱԹԿ, ընդհատում — so the vocabulary matches what your department already approved.
-Words students will meet in an ST datasheet are glossed in English on first use or left
-in Latin outright (`datasheet`, `ODR`, `FIFO`, `LSB`, `RMS`, `0x6B`).
+### What changed in September 2026, and why it matters to you
 
-**Before you teach from them, read `tools/i18n/GLOSSARY-hy.md`.** It flags three terms
-that genuinely want your judgement — ճշտություն / ճշգրտություն / լուծունակություն for
-accuracy / precision / resolution — because Lecture 2 turns on exactly that distinction
-and Armenian engineering usage is not fully settled. Changing a term in the dictionary
-and rerunning the translator updates every slide in both lectures at once, which is why
-the translation is generated rather than hand-edited.
+Between 25 August and 8 September you corrected the L1 and L2 Armenian decks **by hand,
+inside the `.pptx` files** — about 350 paragraphs. None of that was in the dictionaries,
+so the next `translate_deck.py` run would have discarded all of it silently. That has
+been fixed in three ways:
 
-One practical note: Armenian runs 10–25 % longer than English, so a few strings were
-shortened to fit their boxes and the translator eases the point size down where a string
-grew. If you lengthen a translation, re-render and check that slide.
+1. **Your wording was recovered** — 192 of your sentences now live in
+   `tools/i18n/hy_instructor.py`, loaded last so they override everything else.
+2. **Your terminology is now enforced**, not merely recorded. `tools/i18n/hy_terms.py`
+   holds 155 canonical terms and applies them to every translated string, so a term you
+   correct once is correct everywhere, in every lecture, forever. Nine terms in the old
+   dictionaries contradicted your reader and now follow it: **լուծաչափ** (not
+   լուծունակություն), **չափաբերում** (not ստուգաչափում), **արագաչափ** (not
+   աքսելերոմետր), **տվյալների թերթիկ** (not *datasheet*), **դրեյֆ**, **տպասալ**,
+   **պատյան**, **ժամանակային դրոշմ**, **ԿՆԲ** (not *LSB*). Units follow too: Hz → Հց,
+   kHz → կՀց, Pa → Պա in prose, Latin inside a formula — exactly the distinction you
+   made by hand.
+3. **The translator will no longer overwrite an existing `-HY.pptx`.** It prints
+   `· skipping …`. Sixteen paragraphs on the L1 figure slides could not be recovered
+   mechanically, so a blind rebuild would still lose a little; pass `--overwrite`
+   deliberately, and diff, when you are ready.
+
+**Read `tools/i18n/GLOSSARY-hy.md` before teaching from the Armenian decks.** It is
+generated from the term table, so it cannot drift from what the slides say, and it ends
+with five open questions that genuinely need your decision rather than a guess — chiefly
+whether *filter* is **զտիչ** (your reader) or **ֆիլտր** (the accredited ծրագիր), which
+matters because Lecture 3 uses it on eleven slides.
+
+Every run also writes `tools/i18n/_term_warnings.txt`, listing the places the linter
+thinks want your eye. It is short, and it is the file to check after any rebuild.
+
+### Register, not just vocabulary
+
+Your edits were consistently more formal than the generated Armenian, and Lectures 3 and
+4 were written to match: declarative rather than rhetorical, nominal rather than verbal,
+definitions ending in the definite article, no minute markers on student-facing slides
+(*ՔՎԵԱՐԿՈՒԹՅՈՒՆ 1*, not *ՀԱՐՑՈՒՄ 1 · ՐՈՊԵ 7*), and no instructor-facing text on a slide
+the students can see. The full list is in the glossary under "Register".
+
+### Practical notes
+
+- Armenian runs 10–25 % longer than English. The translator eases the point size down
+  where a string grew; if you lengthen a translation, re-render and check that slide.
+- The type is **DejaVu Sans**. Arial and Courier New have no Armenian glyphs at all, and
+  Noto Sans Armenian was rejected because it lacks Latin digits and renders every number
+  spaced as `0 . 0 6 1`. On a machine without DejaVu Sans — most Windows installs — the
+  Armenian still appears but substituted; installing it, free, fixes that.
+- The **Armenian reader** now builds separately: `reader/course-reader-hy.pdf`. Until
+  September the build mixed the Armenian and English chapters into one PDF, because its
+  file glob did not distinguish them. Chapters 3 and 4 have no Armenian version yet.
 
 ---
 
@@ -315,6 +356,13 @@ does, where `main()` lives, how to change a constant, how to open a serial port 
 **20 minutes of Lab 2's session** spent on a guided build-and-flash with the whole room
 doing it together. Lab 2's measurement work (sampling, noise, filtering on a stationary
 signal) is light on setup, so it is the one lab that can afford the time.
+
+**This now exists.** `lab-02/mcu-onramp.md` is that page, and stage 1 of
+`lab-02/lab2-handout.md` is those twenty minutes, choreographed step by step in
+`lab-02/instructor-notes.md`. The constant students change is `LPF2_XL_EN` — Lecture 3's
+own register bit — so the toolchain exercise and the measurement lesson are one act
+rather than two things sharing a session. Every board also ships a known-good binary, per
+§9.2.
 
 Everything after that rides on the plan's existing 0–10 min lab briefing slot.
 

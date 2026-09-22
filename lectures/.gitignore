@@ -1,0 +1,5 @@
+tools/__pycache__/
+tools/i18n/__pycache__/
+tools/.venv/
+*.~lock.*#
+lab-02/capture-firmware/test/lab2_test

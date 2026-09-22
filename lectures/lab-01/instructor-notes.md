@@ -121,7 +121,7 @@ zero-rate level ±1 dps typ (±3 max); rate noise density 5 mdps/√Hz; angular 
 die*. It says nothing about your board after reflow — which is exactly the point Lecture 2
 makes at minute 41, and it is now demonstrable on the students' own datasheet.
 
-### Expected values at rest### Expected values at rest, ±2 g, sensor flat with Z up
+### Expected values at rest, ±2 g, sensor flat with Z up
 
 - `raw_z` ≈ **+16 300 to +16 500** (1000 mg ÷ 0.061 mg/LSB ≈ 16 393)
 - `raw_x`, `raw_y`: the datasheet's zero-g offset accuracy is ±10 mg typ, so expect

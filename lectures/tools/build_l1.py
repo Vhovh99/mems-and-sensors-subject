@@ -1,6 +1,10 @@
 """Lecture 1 — MEMS, sensors, and the measurement-system architecture (80 min)."""
 import math
 from deck import *
+import deck
+
+# these two decks were built before minute markers were dropped; keep their output stable
+deck.SHOW_MINUTES = True
 
 D = Deck("MEMS & Sensors  ·  Lecture 1  ·  Measurement-system architecture")
 S = D.slide

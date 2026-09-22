@@ -1,6 +1,10 @@
 """Lecture 2 — Sensor specifications and datasheet-based selection (80 min)."""
 import math
 from deck import *
+import deck
+
+# these two decks were built before minute markers were dropped; keep their output stable
+deck.SHOW_MINUTES = True
 
 D = Deck("MEMS & Sensors  ·  Lecture 2  ·  Specifications and datasheet-based selection")
 S = D.slide

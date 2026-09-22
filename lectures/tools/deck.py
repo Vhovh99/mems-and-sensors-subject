@@ -34,6 +34,13 @@ CREAM  = RGBColor(0xF7, 0xF5, 0xF1)
 SANS = "Arial"
 MONO = "Courier New"
 
+# Minute markers on student-facing slides were removed by the instructor when the
+# Armenian decks were reviewed: "ՀԱՐՑՈՒՄ 1 · ՐՈՊԵ 7" became "ՔՎԵԱՐԿՈՒԹՅՈՒՆ 1", and
+# "ՄԱՍ 1 · ՐՈՊԵ 10–28" became "ԲԱԺԻՆ 1". Timings live in lecture-plan.md and in the
+# speaker notes, where they are useful, rather than on the screen, where they are not.
+# build_l1.py and build_l2.py set this back to True to reproduce their existing output.
+SHOW_MINUTES = False
+
 W, H = Inches(13.333), Inches(7.5)
 M = Inches(0.72)                       # side margin
 CONTENT_W = W - 2 * M
@@ -210,7 +217,10 @@ def poll(deck, number, question, options, minute, correct=None, note=None,
          reveal=False):
     """Poll / ConcepTest slide. options: list of (letter, text)."""
     s = deck.slide()
-    eyebrow(s, f"POLL {number}   ·   minute {minute}" + ("   ·   ANSWER" if reveal else ""),
+    tag = f"POLL {number}"
+    if SHOW_MINUTES and minute is not None:
+        tag += f"   ·   minute {minute}"
+    eyebrow(s, tag + ("   ·   ANSWER" if reveal else ""),
             AMBER if not reveal else TEAL)
     # long stems need a smaller face and more room, or they clip
     L = len(question)
@@ -244,7 +254,7 @@ def section(deck, kicker, title, items=None, minute=None):
     eyebrow(s, kicker, TEAL)
     txt(s, title, M, Inches(1.9), CONTENT_W - Inches(2), Inches(1.7), 44, CREAM,
         bold=True, line=1.15)
-    if minute:
+    if minute and SHOW_MINUTES:
         txt(s, minute, W - M - Inches(3), Inches(0.28), Inches(3), Inches(0.4),
             13, GRAY, bold=True, font=MONO, align=PP_ALIGN.RIGHT)
     if items:
